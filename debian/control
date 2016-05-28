@@ -1,0 +1,12 @@
+Source: ros-indigo-swri-console
+Section: misc
+Priority: extra
+Maintainer: Elliot Johnson <elliot.johnson@swri.org>
+Build-Depends: debhelper (>= 9.0.0), libqt4-dev, ros-indigo-catkin, ros-indigo-rosbag-storage, ros-indigo-roscpp, ros-indigo-rosgraph-msgs
+Homepage: http://ros.org/wiki/swri_console
+Standards-Version: 3.9.2
+
+Package: ros-indigo-swri-console
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt4-dbus, libqt4-dev, libqt4-network, libqt4-script, libqt4-test, libqt4-xml, libqtcore4, ros-indigo-rosbag-storage, ros-indigo-roscpp, ros-indigo-rosgraph-msgs
+Description: A rosout GUI viewer developed at Southwest Research Insititute as an alternative to rqt_console.
