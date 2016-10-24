@@ -1,3 +1,26 @@
+## swri_console (jade) - 0.2.0-0
+
+The packages in the `swri_console` repository were released into the `jade` distro by running `/usr/bin/bloom-release swri_console --track jade --rosdistro jade` on `Mon, 24 Oct 2016 03:37:21 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `0.2.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.22`
+- catkin_pkg version: `0.2.10`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.4.7`
+- vcstools version: `0.1.39`
+
+
 ## swri_console (indigo) - 0.2.0-0
 
 The packages in the `swri_console` repository were released into the `indigo` distro by running `/usr/bin/bloom-release swri_console --track indigo --rosdistro indigo` on `Mon, 24 Oct 2016 03:13:57 -0000`
