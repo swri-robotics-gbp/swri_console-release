@@ -1,0 +1,12 @@
+Source: ros-jade-swri-console
+Section: misc
+Priority: extra
+Maintainer: Elliot Johnson <elliot.johnson@swri.org>
+Build-Depends: debhelper (>= 9.0.0), libqt5core5a, libqt5gui5, libqt5opengl5-dev, libqt5widgets5, ros-jade-catkin, ros-jade-rosbag-storage, ros-jade-roscpp, ros-jade-rosgraph-msgs
+Homepage: http://ros.org/wiki/swri_console
+Standards-Version: 3.9.2
+
+Package: ros-jade-swri-console
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libqt5core5a, libqt5gui5, libqt5widgets5, ros-jade-rosbag-storage, ros-jade-roscpp, ros-jade-rosgraph-msgs
+Description: A rosout GUI viewer developed at Southwest Research Insititute as an alternative to rqt_console.
