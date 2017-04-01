@@ -1,3 +1,26 @@
+## swri_console (lunar) - 1.0.0-0
+
+The packages in the `swri_console` repository were released into the `lunar` distro by running `/usr/bin/bloom-release swri_console -t lunar -r lunar` on `Sat, 01 Apr 2017 15:49:01 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `1.0.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.5.26`
+- catkin_pkg version: `0.3.1`
+- rosdep version: `0.11.5`
+- rosdistro version: `0.6.1`
+- vcstools version: `0.1.39`
+
+
 ## swri_console (kinetic) - 1.0.0-0
 
 The packages in the `swri_console` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release swri_console -t kinetic -r kinetic` on `Sat, 01 Apr 2017 15:43:10 -0000`
