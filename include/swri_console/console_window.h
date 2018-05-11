@@ -37,6 +37,8 @@
 #include <QSettings>
 #include "ui_console_window.h"
 
+#include "node_click_handler.h"
+
 namespace swri_console
 {
 class LogDatabase;
@@ -49,11 +51,13 @@ class ConsoleWindow : public QMainWindow {
   ConsoleWindow(LogDatabase *db);
   ~ConsoleWindow();
   
-  void closeEvent(QCloseEvent *event); // Overloaded function
+  void closeEvent(QCloseEvent *event);  // Overloaded function
 
  Q_SIGNALS:
   void createNewWindow();
   void readBagFile();
+  void readLogFile();
+  void readLogDirectory();
   void selectFont();
                                        
  public Q_SLOTS:
@@ -75,6 +79,7 @@ class ConsoleWindow : public QMainWindow {
 
   void includeFilterUpdated(const QString &);
   void excludeFilterUpdated(const QString &);
+  void searchIndex();  // VM 4/13/2017
   void updateIncludeLabel();
   void updateExcludeLabel();
 
@@ -85,8 +90,13 @@ class ConsoleWindow : public QMainWindow {
   void setWarnColor();
   void setErrorColor();
   void setFatalColor();
+  void prevIndex();
+  void nextIndex();
 
 private:
+  enum function{NEXT,PREV,SEARCH};
+  function searchFunction_;
+  void updateCurrentIndex(function sF);
   void chooseButtonColor(QPushButton* widget);
   QColor getButtonColor(const QPushButton* button) const;
   void updateButtonColor(QPushButton* widget, const QColor& color);
@@ -102,11 +112,13 @@ private:
   void loadColorButtonSetting(const QString& key, QPushButton* button);
   void loadSettings();
 
+
   Ui::ConsoleWindow ui;
   LogDatabase *db_;
   LogDatabaseProxyModel *db_proxy_;
   NodeListModel *node_list_model_;
+  NodeClickHandler *node_click_handler_;
 };  // class ConsoleWindow
 }  // namespace swri_console
 
-#endif // SWRI_CONSOLE_CONSOLE_WINDOW_H_
+#endif  // SWRI_CONSOLE_CONSOLE_WINDOW_H_
