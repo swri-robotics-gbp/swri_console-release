@@ -1,3 +1,26 @@
+## swri_console (kinetic) - 1.1.0-0
+
+The packages in the `swri_console` repository were released into the `kinetic` distro by running `/usr/bin/bloom-release -r kinetic -t kinetic swri_console` on `Fri, 11 May 2018 20:40:11 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: https://github.com/swri-robotics-gbp/swri_console-release.git
+- rosdistro version: `1.0.0-0`
+- old version: `1.0.0-0`
+- new version: `1.1.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.4`
+- catkin_pkg version: `0.4.2`
+- rosdep version: `0.12.2`
+- rosdistro version: `0.6.8`
+- vcstools version: `0.1.40`
+
+
 ## swri_console (indigo) - 1.1.0-0
 
 The packages in the `swri_console` repository were released into the `indigo` distro by running `/usr/bin/bloom-release -r indigo -t indigo swri_console` on `Fri, 11 May 2018 20:35:30 -0000`
