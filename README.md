@@ -1,3 +1,26 @@
+## swri_console (melodic) - 1.1.0-0
+
+The packages in the `swri_console` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -r melodic -t melodic swri_console` on `Fri, 11 May 2018 20:50:51 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `1.1.0-0`
+
+Versions of tools used:
+
+- bloom version: `0.6.4`
+- catkin_pkg version: `0.4.2`
+- rosdep version: `0.12.2`
+- rosdistro version: `0.6.8`
+- vcstools version: `0.1.40`
+
+
 ## swri_console (lunar) - 1.1.0-0
 
 The packages in the `swri_console` repository were released into the `lunar` distro by running `/usr/bin/bloom-release -r lunar -t lunar swri_console` on `Fri, 11 May 2018 20:44:58 -0000`
