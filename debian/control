@@ -1,0 +1,12 @@
+Source: ros-dashing-swri-console
+Section: misc
+Priority: optional
+Maintainer: P. J. Reed <preed@swri.org>
+Build-Depends: debhelper (>= 9.0.0), libboost-all-dev, libqt5core5a, libqt5gui5, libqt5opengl5-dev, libqt5widgets5, ros-dashing-ament-cmake, ros-dashing-rcl-interfaces, ros-dashing-rclcpp, ros-dashing-rosidl-default-generators, ros-dashing-ros-workspace
+Homepage: http://ros.org/wiki/swri_console
+Standards-Version: 3.9.2
+
+Package: ros-dashing-swri-console
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libboost-all-dev, libqt5core5a, libqt5gui5, libqt5widgets5, ros-dashing-rcl-interfaces, ros-dashing-rclcpp, ros-dashing-rosidl-default-runtime, ros-dashing-ros-workspace
+Description: A rosout GUI viewer developed at Southwest Research Insititute as an alternative to rqt_console.
