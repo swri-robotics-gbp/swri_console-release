@@ -1,3 +1,26 @@
+## swri_console (dashing) - 2.0.0-1
+
+The packages in the `swri_console` repository were released into the `dashing` distro by running `/usr/bin/bloom-release -r dashing swri_console` on `Tue, 31 Mar 2020 21:22:44 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `2.0.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.9.3`
+- catkin_pkg version: `0.4.16`
+- rosdep version: `0.18.0`
+- rosdistro version: `0.8.0`
+- vcstools version: `0.1.42`
+
+
 ## swri_console (melodic) - 1.1.0-0
 
 The packages in the `swri_console` repository were released into the `melodic` distro by running `/usr/bin/bloom-release -r melodic -t melodic swri_console` on `Fri, 11 May 2018 20:50:51 -0000`
