@@ -44,13 +44,13 @@ class NodeListModel : public QAbstractListModel
   Q_OBJECT
   
  public:
-  explicit NodeListModel(LogDatabase* db);
-  ~NodeListModel() override = default;
+  NodeListModel(LogDatabase* db);
+  ~NodeListModel();
 
   std::string nodeName(const QModelIndex &index) const;
   
-  int rowCount(const QModelIndex &parent) const override;
-  QVariant data(const QModelIndex &index, int role) const override;
+  virtual int rowCount(const QModelIndex &parent) const;
+  virtual QVariant data(const QModelIndex &index, int role) const;
 
  public Q_SLOTS:
   void clear();

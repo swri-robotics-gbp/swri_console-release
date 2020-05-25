@@ -36,7 +36,7 @@
 #include <QStringList>
 #include <QRegExp>
 
-#include <cstdint>
+#include <stdint.h>
 #include <set>
 #include <string>
 #include <deque>
@@ -46,7 +46,6 @@ namespace swri_console
 
 class LogDatabase;
 struct LogEntry;
-
 class LogDatabaseProxyModel : public QAbstractListModel
 {
   Q_OBJECT
@@ -56,8 +55,8 @@ class LogDatabaseProxyModel : public QAbstractListModel
     ExtendedLogRole = Qt::UserRole + 0
   };
 
-  explicit LogDatabaseProxyModel(LogDatabase *db);
-  ~LogDatabaseProxyModel() override = default;
+  LogDatabaseProxyModel(LogDatabase *db);
+  ~LogDatabaseProxyModel();
 
   void setNodeFilter(const std::set<std::string> &names);
   void setSeverityFilter(uint8_t severity_mask);
@@ -72,11 +71,11 @@ class LogDatabaseProxyModel : public QAbstractListModel
   void setFatalColor(const QColor& fatal_color);
   bool isIncludeValid() const;
   bool isExcludeValid() const;
-  int getItemIndex(const QString& searchText, int index, int increment);
+  int getItemIndex(const QString searchText, int index, int increment);
   void clearSearchFailure();
 
-  int rowCount(const QModelIndex &parent) const override;
-  QVariant data(const QModelIndex &index, int role) const override;
+  virtual int rowCount(const QModelIndex &parent) const;
+  virtual QVariant data(const QModelIndex &index, int role) const;
 
   void reset();
 

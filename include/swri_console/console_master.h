@@ -35,18 +35,16 @@
 #include <QObject>
 #include <QList>
 #include <QFont>
-
-#include <rclcpp/rclcpp.hpp>
-#include <rcl_interfaces/msg/log.hpp>
-
+#include <rosgraph_msgs/Log.h>
 #include <swri_console/log_database.h>
 #include <swri_console/bag_reader.h>
 #include <swri_console/rosout_log_loader.h>
-#include <swri_console/ros_thread.h>
+
+#include "ros_thread.h"
 
 namespace swri_console
 {
-typedef std::vector<rcl_interfaces::msg::Log::SharedPtr> MessageList;
+typedef std::vector<rosgraph_msgs::LogConstPtr> MessageList;
 
 class ConsoleWindow;
 class ConsoleMaster : public QObject
@@ -55,7 +53,7 @@ class ConsoleMaster : public QObject
 
  public:  
   ConsoleMaster(int argc, char** argv);
-  ~ConsoleMaster() override;
+  virtual ~ConsoleMaster();
 
  public Q_SLOTS:
   void createNewWindow();

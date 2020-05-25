@@ -28,14 +28,13 @@
 //
 // *****************************************************************************
 
-#include <cstdint>
-#include <cstdio>
+#include <stdint.h>
+#include <stdio.h>
 #include <set>
 
-// #include <rosgraph_msgs/Log.h>
-// #include <ros/master.h>  // required for getURI, VCM 12 April 2017
-#include <rclcpp/rclcpp.hpp>
-#include <rcl_interfaces/msg/log.hpp>
+#include <rosgraph_msgs/Log.h>
+#include <ros/master.h>  // required for getURI, VCM 12 April 2017
+
 
 #include <swri_console/console_window.h>
 #include <swri_console/log_database.h>
@@ -59,13 +58,12 @@ using namespace Qt;
 namespace swri_console {
 
 ConsoleWindow::ConsoleWindow(LogDatabase *db)
-  : QMainWindow()
-  , searchFunction_(SEARCH)
-  , ui()
-  , db_(db)
-  , db_proxy_(new LogDatabaseProxyModel(db))
-  , node_list_model_(new NodeListModel(db))
-  , node_click_handler_(new NodeClickHandler())
+  :
+  QMainWindow(),
+  db_(db),
+  db_proxy_(new LogDatabaseProxyModel(db)),
+  node_list_model_(new NodeListModel(db)),
+  node_click_handler_(new NodeClickHandler())
 {
   ui.setupUi(this); 
 
@@ -225,7 +223,7 @@ void ConsoleWindow::saveLogs()
                                                   "Save Logs",
                                                   QDir::homePath() + QDir::separator() + defaultname,
                                                   tr("Bag Files (*.bag);;Text Files (*.txt)"));
-  if (filename != nullptr && !filename.isEmpty()) {
+  if (filename != NULL && !filename.isEmpty()) {
     db_proxy_->saveToFile(filename);
   }
 }
@@ -233,9 +231,11 @@ void ConsoleWindow::saveLogs()
 void ConsoleWindow::connected(bool connected)
 {
   if (connected) {
-    statusBar()->showMessage("Listening for logs.");
+    // When connected, display current URL along with status in the status bar, VCM 4/12/2017
+    QString currentUrl = QString::fromStdString(ros::master::getURI());
+    statusBar()->showMessage("Connected to ROS Master.  URL: "+currentUrl);
   } else {
-    statusBar()->showMessage("ROS has shut down.");
+    statusBar()->showMessage("Disconnected from ROS Master.");
   }
 }
 
@@ -251,8 +251,8 @@ void ConsoleWindow::nodeSelectionChanged()
   std::set<std::string> nodes;
   QStringList node_names;
 
-  for (const auto & i : selection) {
-    std::string name = node_list_model_->nodeName(i);
+  for (int i = 0; i < selection.size(); i++) {
+    std::string name = node_list_model_->nodeName(selection[i]);
     nodes.insert(name);
     node_names.append(name.c_str());
   }
@@ -271,19 +271,19 @@ void ConsoleWindow::setSeverityFilter()
   uint8_t mask = 0;
 
   if (ui.checkDebug->isChecked()) {
-    mask |= rcl_interfaces::msg::Log::DEBUG;
+    mask |= rosgraph_msgs::Log::DEBUG;
   }
   if (ui.checkInfo->isChecked()) {
-    mask |= rcl_interfaces::msg::Log::INFO;
+    mask |= rosgraph_msgs::Log::INFO;
   }
   if (ui.checkWarn->isChecked()) {
-    mask |= rcl_interfaces::msg::Log::WARN;
+    mask |= rosgraph_msgs::Log::WARN;
   }
   if (ui.checkError->isChecked()) {
-    mask |= rcl_interfaces::msg::Log::ERROR;
+    mask |= rosgraph_msgs::Log::ERROR;
   }
   if (ui.checkFatal->isChecked()) {
-    mask |= rcl_interfaces::msg::Log::FATAL;
+    mask |= rosgraph_msgs::Log::FATAL;
   }
 
   QSettings settings;

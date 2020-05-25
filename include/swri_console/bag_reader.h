@@ -35,8 +35,7 @@
 #include <QString>
 #include <QMetaType>
 
-#include <rclcpp/rclcpp.hpp>
-#include <rcl_interfaces/msg/log.hpp>
+#include <rosgraph_msgs/Log.h>
 
 namespace swri_console
 {
@@ -64,7 +63,7 @@ namespace swri_console
      * Emitted every time a log message is received.  This will likely be emitted several times
      * per bag file; finishedReading will be emitted when we're done.
      */
-    void logReceived(const rcl_interfaces::msg::Log::ConstSharedPtr);
+    void logReceived(const rosgraph_msgs::LogConstPtr& msg);
 
     /**
      * Emitted after we're completely done reading the bag file.

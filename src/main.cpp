@@ -84,7 +84,7 @@ int main(int argc, char **argv)
   
   swri_console::ConsoleMaster master(argc, argv);
   master.createNewWindow();
-  QApplication::connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
-  int result = QApplication::exec();
+  app.connect(&app, SIGNAL(lastWindowClosed()), &app, SLOT(quit()));
+  int result = app.exec();
   return result;
 }

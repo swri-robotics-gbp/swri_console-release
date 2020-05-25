@@ -33,10 +33,10 @@
 #include <QDirIterator>
 
 #include <fstream>
-#include <rclcpp/rclcpp.hpp>
-#include <rcl_interfaces/msg/log.hpp>
+#include <ros/time.h>
+#include <rosbag/bag.h>
 #include <swri_console/rosout_log_loader.h>
-#include <ctime>
+#include <time.h>
 #include <string>
 
 namespace swri_console
@@ -58,22 +58,24 @@ namespace swri_console
   {
     std::string std_string_logfile = logfile_name.toStdString();
     std::ifstream logfile(std_string_logfile.c_str());
+    int seq = 0;
     for( std::string line; getline( logfile, line ); )
     {
-      rcl_interfaces::msg::Log log;
+      rosgraph_msgs::Log log;
       unsigned found = std_string_logfile.find_last_of("/\\");
       log.name = std_string_logfile.substr(found+1);
-      int result = parseLine(line, &log);
+      int result = parseLine(line, seq, &log);
       if (result == 0)
       {
-        rcl_interfaces::msg::Log::SharedPtr log_ptr = std::make_shared<rcl_interfaces::msg::Log>(log);
+        rosgraph_msgs::LogConstPtr log_ptr(new rosgraph_msgs::Log(log));
         emit logReceived(log_ptr);
       }
+      seq++;
     }
     emit finishedReading();
   }
 
-  int RosoutLogLoader::parseLine(const std::string& line, rcl_interfaces::msg::Log* log)
+  int RosoutLogLoader::parseLine(std::string line, int seq, rosgraph_msgs::Log* log)
   {
     // Example: 1507066364.728102032 INFO [/home/pwesthart/code/src/mapviz/tile_map/src/tile_map_plugin.cpp:260(TileMapPlugin::PrintInfo) [topics: /rosout] OK
     char log_msg_fmt0[] = "%d.%d %s [%[^:]:%u(%[^)]) [topics: %[^]]] %[^\n]s";
@@ -85,7 +87,7 @@ namespace swri_console
     char function[128];
     char topics[1024];
     char msg[1024*32];
-    rclcpp::Time stamp;
+    ros::Time stamp;
 
     /// Scan variables in from parsed line
     int num_parsed = sscanf(line.c_str(),log_msg_fmt0,&secs, &nsecs, level, file, &line_num, function, topics, msg);
@@ -94,11 +96,10 @@ namespace swri_console
       // Populate new log message
       log->file = file;
       log->function = function;
-      // log->header.seq = seq;
-      // stamp.sec = secs;
-      // stamp.nsec = nsecs;
-      stamp = rclcpp::Time(secs, nsecs);
-      log->stamp = stamp;
+      log->header.seq = seq;
+      stamp.sec = secs;
+      stamp.nsec = nsecs;
+      log->header.stamp = stamp;
       log->level = level_string_to_level_type(std::string(level));
       log->line = line_num;
       log->msg = msg;
@@ -112,11 +113,10 @@ namespace swri_console
         // Populate new log message
         log->file = file;
         log->function = function;
-        // log->header.seq = seq;
-        // stamp.sec = secs;
-        // stamp.nsec = nsecs;
-        stamp = rclcpp::Time(secs, nsecs);
-        log->stamp = stamp;
+        log->header.seq = seq;
+        stamp.sec = secs;
+        stamp.nsec = nsecs;
+        log->header.stamp = stamp;
         log->level = level_string_to_level_type(std::string(level));
         log->line = line_num;
         log->msg = msg;
@@ -155,11 +155,10 @@ namespace swri_console
           nsecs = msecs * 1000000;
           log->file = file;
           log->function = function;
-          // log->header.seq = seq;
-          // stamp.sec = secs;
-          // stamp.nsec = nsecs;
-          stamp = rclcpp::Time(secs, nsecs);
-          log->stamp = stamp;
+          log->header.seq = seq;
+          stamp.sec = secs;
+          stamp.nsec = nsecs;
+          log->header.stamp = stamp;
           log->level = level_string_to_level_type(std::string(level));
           log->line = line_num;
           log->msg = msg;
@@ -180,11 +179,10 @@ namespace swri_console
             line_num = 0;
             log->file = file;
             log->function = function;
-            // log->header.seq = seq;
-            // stamp.sec = secs;
-            // stamp.nsec = nsecs;
-            stamp = rclcpp::Time(secs, nsecs);
-            log->stamp = stamp;
+            log->header.seq = seq;
+            stamp.sec = secs;
+            stamp.nsec = nsecs;
+            log->header.stamp = stamp;
             log->level = level_string_to_level_type(std::string(level));
             log->line = line_num;
             log->msg = msg;
@@ -205,11 +203,10 @@ namespace swri_console
               line_num = 0;
               log->file = file;
               log->function = function;
-              // log->header.seq = seq;
-              // stamp.sec = secs;
-              // stamp.nsec = nsecs;
-              stamp = rclcpp::Time(secs, nsecs);
-              log->stamp = stamp;
+              log->header.seq = seq;
+              stamp.sec = secs;
+              stamp.nsec = nsecs;
+              log->header.stamp = stamp;
               log->level = level_string_to_level_type(std::string(level));
               log->line = line_num;
               log->msg = msg;
@@ -222,11 +219,10 @@ namespace swri_console
               }
               log->file = std::string("");
               log->function = std::string("");
-              // log->header.seq = seq;
-              // stamp.sec = 0;
-              // stamp.nsec = 0;
-              stamp = rclcpp::Time(0, 0);
-              log->stamp = stamp;
+              log->header.seq = seq;
+              stamp.sec = 0;
+              stamp.nsec = 0;
+              log->header.stamp = stamp;
               log->level = level_string_to_level_type(std::string("DEBUG"));
               log->line = 0;
               log->msg = line;
@@ -239,36 +235,36 @@ namespace swri_console
     return 0;
   }
 
-  rcl_interfaces::msg::Log::_level_type RosoutLogLoader::level_string_to_level_type(const std::string& level_str)
+  rosgraph_msgs::Log::_level_type RosoutLogLoader::level_string_to_level_type(std::string level_str)
   {
-    if (level_str == "FATAL")
+    if (level_str.compare("FATAL") == 0)
     {
-      return rcl_interfaces::msg::Log::FATAL;
+      return rosgraph_msgs::Log::FATAL;
     }
-    if (level_str == "ERROR")
+    if (level_str.compare("ERROR") == 0)
     {
-      return rcl_interfaces::msg::Log::ERROR;
+      return rosgraph_msgs::Log::ERROR;
     }
-    if (level_str == "WARN")
+    if (level_str.compare("WARN") == 0)
     {
-      return rcl_interfaces::msg::Log::WARN;
+      return rosgraph_msgs::Log::WARN;
     }
-    if (level_str == "INFO")
+    if (level_str.compare("INFO") == 0)
     {
-      return rcl_interfaces::msg::Log::INFO;
+      return rosgraph_msgs::Log::INFO;
     }
-    return rcl_interfaces::msg::Log::DEBUG;
+    return rosgraph_msgs::Log::DEBUG;
   }
 
 
   void RosoutLogLoader::promptForLogFile()
   {
-    QString filename = QFileDialog::getOpenFileName(nullptr,
+    QString filename = QFileDialog::getOpenFileName(NULL,
                                                     tr("Open ROS Log File"),
                                                     QDir::homePath(),
                                                     tr("Log Files (*.log)"));
 
-    if (filename != nullptr)
+    if (filename != NULL)
     {
       loadRosLog(filename);
     }
@@ -276,11 +272,11 @@ namespace swri_console
 
   void RosoutLogLoader::promptForLogDirectory()
   {
-    QString dirname = QFileDialog::getExistingDirectory(nullptr,
+    QString dirname = QFileDialog::getExistingDirectory(NULL,
                                                     tr("Open directory containing log files"),
                                                     QDir::homePath());
 
-    if (dirname != nullptr)
+    if (dirname != NULL)
     {
       loadRosLogDirectory(dirname);
     }

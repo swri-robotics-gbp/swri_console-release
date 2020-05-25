@@ -28,7 +28,8 @@
 //
 // *****************************************************************************
 
-#include <cstdio>
+#include <stdio.h>
+#include <vector>
 
 #include <swri_console/node_list_model.h>
 #include <swri_console/log_database.h>
@@ -36,12 +37,17 @@
 namespace swri_console
 {
 NodeListModel::NodeListModel(LogDatabase *db)
-  : db_(db)
+  :
+  db_(db)
 {
   QObject::connect(db_, SIGNAL(databaseCleared()),
                    this, SLOT(handleDatabaseCleared()));
   QObject::connect(db_, SIGNAL(messagesAdded()),
                    this, SLOT(handleMessagesAdded()));
+}
+
+NodeListModel::~NodeListModel()
+{
 }
 
 int NodeListModel::rowCount(const QModelIndex &parent) const
@@ -84,8 +90,7 @@ void NodeListModel::clear()
   if (ordering_.empty()) {
     return;
   }
-  beginRemoveRows(QModelIndex(), 0,
-      static_cast<int>(ordering_.size())-1);
+  beginRemoveRows(QModelIndex(), 0, ordering_.size()-1);
   data_.clear();
   ordering_.clear();
   endRemoveRows();
@@ -103,8 +108,7 @@ void NodeListModel::handleDatabaseCleared()
     (*iter).second = 0;
   }
 
-  Q_EMIT dataChanged(index(0),
-      index(static_cast<int>(data_.size())-1));
+  Q_EMIT dataChanged(index(0), index(data_.size()-1));
 }
 
 void NodeListModel::handleMessagesAdded()
@@ -112,20 +116,22 @@ void NodeListModel::handleMessagesAdded()
   const std::map<std::string, size_t> &msg_counts = db_->messageCounts();
   
   size_t i = 0;
-  for (const auto & msg_count : msg_counts)
+  for (std::map<std::string, size_t>::const_iterator it = msg_counts.begin();
+       it != msg_counts.end();
+       ++it)
   {
-    if (!data_.count(msg_count.first)) {
+    if (!data_.count(it->first)) {
       beginInsertRows(QModelIndex(), i, i);
-      data_[msg_count.first] = msg_count.second;
-      ordering_.insert(ordering_.begin() + i, msg_count.first);
+      data_[it->first] = it->second;
+      ordering_.insert(ordering_.begin() + i, it->first);
       endInsertRows();
     } else {
-      data_[msg_count.first] = msg_count.second;
+      data_[it->first] = it->second;
     }
     i++;
   }
   
   Q_EMIT dataChanged(index(0),
-                     index(static_cast<int>(ordering_.size())-1));
+                     index(ordering_.size()-1));
 }
 }  // namespace swri_console
