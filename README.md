@@ -1,3 +1,26 @@
+## swri_console (noetic) - 1.1.1-1
+
+The packages in the `swri_console` repository were released into the `noetic` distro by running `/usr/bin/bloom-release --rosdistro noetic swri_console` on `Tue, 04 Apr 2023 18:40:12 -0000`
+
+The `swri_console` package was released.
+
+Version of package(s) in repository `swri_console`:
+
+- upstream repository: https://github.com/swri-robotics/swri_console.git
+- release repository: https://github.com/swri-robotics-gbp/swri_console-release.git
+- rosdistro version: `1.1.0-1`
+- old version: `1.1.0-1`
+- new version: `1.1.1-1`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## swri_console (noetic) - 1.1.0-1
 
 The packages in the `swri_console` repository were released into the `noetic` distro by running `/usr/bin/bloom-release -r noetic swri_console` on `Mon, 25 May 2020 16:56:09 -0000`
