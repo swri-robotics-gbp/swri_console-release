@@ -34,6 +34,9 @@ namespace swri_console
 {
   const QString SettingsKeys::DISPLAY_TIMESTAMPS = "Timestamps/DisplayTimestamps";
   const QString SettingsKeys::ABSOLUTE_TIMESTAMPS = "Timestamps/AbsoluteTimestamps";
+  const QString SettingsKeys::HUMAN_READABLE_TIME = "Timestamps/HumanReadableTime";
+  const QString SettingsKeys::DISPLAY_LOGGER = "Identification/Logger";
+  const QString SettingsKeys::DISPLAY_FUNCTION = "Identification/Function";
   const QString SettingsKeys::USE_REGEXPS = "Filters/UseRegexps";
   const QString SettingsKeys::INCLUDE_FILTER = "Filters/IncludeFilter";
   const QString SettingsKeys::EXCLUDE_FILTER = "Filters/ExcludeFilter";
