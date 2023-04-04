@@ -31,6 +31,9 @@
 #include <stdio.h>
 #include <algorithm>
 #include <iterator>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
 
 #include <ros/time.h>
 #include <rosbag/bag.h>
@@ -53,6 +56,9 @@ LogDatabaseProxyModel::LogDatabaseProxyModel(LogDatabase *db)
   colorize_logs_(true),
   display_time_(true),
   display_absolute_time_(false),
+  human_readable_time_(false),
+  display_logger_(false),
+  display_function_(false),
   use_regular_expressions_(false),
   debug_color_(Qt::gray),
   info_color_(Qt::black),
@@ -103,7 +109,21 @@ void LogDatabaseProxyModel::setAbsoluteTime(bool absolute)
     Q_EMIT dataChanged(index(0), index(msg_mapping_.size()));
   }
 }
+void LogDatabaseProxyModel::setHumanReadableTime(bool human_readable_time)
+{
+    if (human_readable_time == human_readable_time_) {
+        return;
+    }
 
+    human_readable_time_ = human_readable_time;
+
+    QSettings settings;
+    settings.setValue(SettingsKeys::HUMAN_READABLE_TIME, human_readable_time_);
+
+    if (display_time_ && msg_mapping_.size()) {
+        Q_EMIT dataChanged(index(0), index(msg_mapping_.size()));
+    }
+}
 
 void LogDatabaseProxyModel::setColorizeLogs(bool colorize_logs)
 {
@@ -132,6 +152,38 @@ void LogDatabaseProxyModel::setDisplayTime(bool display)
   settings.setValue(SettingsKeys::DISPLAY_TIMESTAMPS, display_time_);
 
   if (msg_mapping_.size()) {
+    Q_EMIT dataChanged(index(0), index(msg_mapping_.size()));
+  }
+}
+
+void LogDatabaseProxyModel::setDisplayLogger(bool logger_name)
+{
+  if (logger_name == display_logger_) {
+    return;
+  }
+
+  display_logger_ = logger_name;
+
+  QSettings settings;
+  settings.setValue(SettingsKeys::DISPLAY_LOGGER, display_logger_);
+
+  if (!msg_mapping_.empty()) {
+    Q_EMIT dataChanged(index(0), index(msg_mapping_.size()));
+  }
+}
+
+void LogDatabaseProxyModel::setDisplayFunction(bool function_name)
+{
+  if (function_name == display_function_) {
+    return;
+  }
+
+  display_function_ = function_name;
+
+  QSettings settings;
+  settings.setValue(SettingsKeys::DISPLAY_FUNCTION, display_function_);
+
+  if (!msg_mapping_.empty()) {
     Q_EMIT dataChanged(index(0), index(msg_mapping_.size()));
   }
 }
@@ -372,10 +424,19 @@ QVariant LogDatabaseProxyModel::data(
 
     char stamp[128];
     if (display_absolute_time_) {
-      snprintf(stamp, sizeof(stamp),
-               "%u.%09u",
-               item.stamp.sec,
-               item.stamp.nsec);
+
+        if(human_readable_time_){
+            int milliseconds = item.stamp.nsec / 1000000 ;
+            const time_t time = static_cast<time_t>(item.stamp.sec);
+            std::ostringstream oss;
+            oss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+            snprintf(stamp, sizeof(stamp), "%s::%03d",oss.str().c_str(), milliseconds);
+        }else{
+          snprintf(stamp, sizeof(stamp),
+                   "%u.%09u",
+                   item.stamp.sec,
+                   item.stamp.nsec);
+        }
     } else {
       ros::Duration t = item.stamp - db_->minTime();
 
@@ -390,13 +451,26 @@ QVariant LogDatabaseProxyModel::data(
                hours, minutes, seconds, milliseconds);
     }
 
+    char id[256];
+    if (display_logger_ && display_function_) {
+      snprintf(id, sizeof(id), "%s::%s", item.node.c_str(), item.function.c_str());
+    } else if (display_logger_ && !display_function_) {
+      snprintf(id, sizeof(id), "%s", item.node.c_str());
+    } else if (!display_logger_ && display_function_) {
+      snprintf(id, sizeof(id), "::%s", item.function.c_str());
+    }
+
+    bool display_id = display_logger_ || display_function_;
+
     char header[1024];
-    if (display_time_) {
-      snprintf(header, sizeof(header),
-               "[%c %s] ", level, stamp);
+    if (display_time_ && display_id) {
+      snprintf(header, sizeof(header), "%c %s [%s] ", level, stamp, id);
+    } else if (display_time_) {
+      snprintf(header, sizeof(header), "%c %s [] ", level, stamp);
+    } else if (display_id) {
+      snprintf(header, sizeof(header), "%c [%s] ", level, id);
     } else {
-      snprintf(header, sizeof(header),
-               "[%c] ", level);
+      snprintf(header, sizeof(header), "%c [] ", level);
     }
 
     // For multiline messages, we only want to display the header for

@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>swri_console</name>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <description>
 
      A rosout GUI viewer developed at Southwest Research Insititute as an
      alternative to rqt_console.
 
   </description>
-  <maintainer email="elliot.johnson@swri.org">Elliot Johnson</maintainer>
-  <author email="elliot.johnson@swri.org">Elliot Johnson</author>
+  <maintainer email="preed@swri.org">P. J. Reed</maintainer>
+  <maintainer email="jtowler@swri.org">Jerry Towler</maintainer>
   <url>http://ros.org/wiki/swri_console</url>
   <license>BSD</license>
 
